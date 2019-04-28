@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %} - список объявлений{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6">
+            {% if user.is_authenticated %}
+                <a href="{% url 'board:add' %}" class="btn btn-success float-left">Добавить объявление</a>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline float-right" method="get">
+                <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Search" name="filter"
+                       value="{{ filter }}">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Найти</button>
+            </form>
+        </div>
+    </div>
+    {% if latest_ad_list %}
+        <ul class="list-group">
+            {% for ad in latest_ad_list %}
+                <div class="row top-buffer">
+                    <div class="col-md-12">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <p>{{ ad.author }}</p>
+                                    <p>{{ ad.created_at|date:"H:i d-m-Y" }}</p>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="row"><h3>{{ ad.title }}</h3></div>
+                                    <div class="row"><p>{{ ad.ad_text|truncatechars:200 }}</p></div>
+                                    <div>Просмотров: {{ ad.view_count }}</div>
+                                    <hr>
+                                    <a class="btn btn-primary" href={% url 'board:detail' ad.id %}>Просмотр</a>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+            {% endfor %}
+        </ul>
+        {% if is_paginated %}
+            <div class="pagination top-buffer">
+                <span class="page-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}"> <span
+                                aria-hidden="true">&laquo;</span> </a>
+                    {% endif %}
+                    <span class="page-current">
+                        {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}"> <span aria-hidden="true">&raquo;</span> </a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="row top-buffer">
+            <div class="col-md-12">
+                <p class="bottom-buffer">Объявлений не найдено.</p>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

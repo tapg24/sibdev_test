@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %} - личный кабинет{% endblock %}
+
+{% block content %}
+
+    <h3>Личный кабинет пользователя</h3>
+
+    <div class="row">
+        <div class="col-md-6">
+            <a href="{% url 'board:add' %}" class="btn btn-success float-left">Добавить объявление</a>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline float-right" method="get">
+                <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Search" name="filter"
+                       value="{{ filter }}">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Найти</button>
+            </form>
+        </div>
+    </div>
+    {% if ad_list %}
+        <table class="table top-buffer">
+            <thead>
+            <tr>
+                <th scope="col">Дата создания</th>
+                <th scope="col">Заголовок</th>
+                <th scope="col">Содержание</th>
+                <th scope="col">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ad in ad_list %}
+                <tr>
+                    <td>{{ ad.created_at|date:"H:i d-m-Y" }}</td>
+                    <td>{{ ad.title }}</td>
+                    <td>{{ ad.ad_text|truncatechars:50 }}</td>
+                    <td>
+                        <a href={% url 'board:detail' ad.id %}>Просмотр</a> /
+                        <a href={% url 'board:update' ad.id %}>Редактировать</a> /
+                        <a href="{% url 'board:delete' pk=ad.id %}">Удалить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="row top-buffer">
+            <div class="col-md-12">
+                <p class="bottom-buffer">Объявлений не найдено.</p>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

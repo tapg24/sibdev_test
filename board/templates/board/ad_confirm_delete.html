@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>Вы действительно хотите удалить объявление? <button type="submit" class="btn btn-danger">Удалить</button></p>
+        <h3>{{ object.title }}</h3>
+        <p>{{ object.ad_text }}</p>
+
+    </form>
+
+{% endblock %}
