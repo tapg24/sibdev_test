@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.views import generic
@@ -32,7 +33,7 @@ def register(request):
 #     return render(request, 'accounts/profile.html')
 
 
-class ProfileView(generic.ListView):
+class ProfileView(LoginRequiredMixin, generic.ListView):
     template_name = 'accounts/profile.html'
     context_object_name = 'ad_list'
     # paginate_by = 3

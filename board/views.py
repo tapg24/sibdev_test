@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 
 from .models import Ad
@@ -49,7 +50,7 @@ class DetailView(generic.DetailView):
         return super().get(request, *args, **kwargs)
 
 
-class AdCreateView(CreateView):
+class AdCreateView(LoginRequiredMixin, CreateView):
     model = Ad
     template_name = 'board/ad_create.html'
     fields = ('title', 'ad_text')
@@ -62,7 +63,7 @@ class AdCreateView(CreateView):
         return reverse('profile')
 
 
-class AdUpdateView(UpdateView):
+class AdUpdateView(LoginRequiredMixin, UpdateView):
     model = Ad
     template_name = 'board/ad_update.html'
     fields = ('title', 'ad_text')
@@ -71,7 +72,7 @@ class AdUpdateView(UpdateView):
         return reverse('board:detail', kwargs={'pk': self.object.id})
 
 
-class AdDeleteView(DeleteView):
+class AdDeleteView(LoginRequiredMixin, DeleteView):
     model = Ad
     template_name = 'board/ad_confirm_delete.html'
     success_url = reverse_lazy('profile')
