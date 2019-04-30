@@ -68,6 +68,12 @@ class AdUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'board/ad_update.html'
     fields = ('title', 'ad_text')
 
+    def get_object(self, queryset=None):
+        ad = super(AdUpdateView, self).get_object()
+        if ad.author != self.request.user:
+            raise Http404
+        return ad
+
     def get_success_url(self):
         return reverse('board:detail', kwargs={'pk': self.object.id})
 
